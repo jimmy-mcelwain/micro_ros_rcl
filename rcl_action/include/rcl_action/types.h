@@ -60,7 +60,8 @@ extern "C"
 #define uuidcmpzero(uuid) uuidcmp(uuid, (zerouuid))
 
 // Forward declare
-typedef struct rcl_action_server_t rcl_action_server_t;
+// TODO: FIXME: can't just disable rcl_action_server_t forward decl struct typedef
+// typedef struct rcl_action_server_t rcl_action_server_t;
 
 // Typedef generated messages for convenience
 typedef action_msgs__msg__GoalInfo rcl_action_goal_info_t;
