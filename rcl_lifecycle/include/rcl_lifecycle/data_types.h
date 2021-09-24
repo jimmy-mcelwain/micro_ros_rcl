@@ -24,7 +24,8 @@ extern "C"
 {
 #endif
 
-typedef struct rcl_lifecycle_transition_t rcl_lifecycle_transition_t;
+// TODO: FIXME: disabled rcl_lifecycle_transition_t forward declare
+//typedef struct rcl_lifecycle_transition_t rcl_lifecycle_transition_t;
 
 /// It contains the state of the lifecycle state machine
 typedef struct rcl_lifecycle_state_t
@@ -35,7 +36,7 @@ typedef struct rcl_lifecycle_state_t
   uint8_t id;
 
   /// Pointer to a struct with the valid transitions
-  rcl_lifecycle_transition_t * valid_transitions;
+  struct rcl_lifecycle_transition_t * valid_transitions;
   /// Number of valid transitions
   unsigned int valid_transition_size;
 } rcl_lifecycle_state_t;
