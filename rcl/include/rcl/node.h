@@ -40,7 +40,8 @@ extern "C"
 extern const char * const RCL_DISABLE_LOANED_MESSAGES_ENV_VAR;
 
 typedef struct rcl_node_impl_s rcl_node_impl_t;
-typedef struct rcl_service_s rcl_service_t;
+// typedef struct rcl_service_s rcl_service_t;
+struct rcl_service_s;
 
 /// Structure which encapsulates a ROS Node.
 typedef struct rcl_node_s
@@ -634,7 +635,7 @@ RCL_PUBLIC
 RCL_WARN_UNUSED
 rcl_ret_t rcl_node_get_type_description_service(
   const rcl_node_t * node,
-  rcl_service_t ** service_out);
+  struct rcl_service_s ** service_out);
 
 
 /// Process a single pending request to the GetTypeDescription service.
