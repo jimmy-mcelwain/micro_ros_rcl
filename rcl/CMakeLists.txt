@@ -122,7 +122,7 @@ if(NOT RCL_MICROROS)
 endif()
 
 if(NOT RCL_MICROROS)
-  ament_target_dependencies(${PROJECT_NAME}
+  ament_target_dependencies(${PROJECT_NAME} PUBLIC
     ${RCL_LOGGING_IMPL}
   )
 endif()
