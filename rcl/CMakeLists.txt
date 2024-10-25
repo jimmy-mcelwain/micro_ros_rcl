@@ -19,7 +19,7 @@ find_package(type_description_interfaces REQUIRED)
 if(NOT RCL_MICROROS)
   find_package(libyaml_vendor REQUIRED)
   find_package(yaml REQUIRED)
-  find_package(rcl_yaml_param_parser REQUIRED)
+  #find_package(rcl_yaml_param_parser REQUIRED)
 endif()
 
 include(cmake/rcl_set_symbol_visibility_hidden.cmake)
@@ -115,11 +115,11 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
 )
 endif()
 
-if(NOT RCL_MICROROS)
-  ament_target_dependencies(${PROJECT_NAME}
-    "rcl_yaml_param_parser"
-  )
-endif()
+#if(NOT RCL_MICROROS)
+#  ament_target_dependencies(${PROJECT_NAME}
+#    "rcl_yaml_param_parser"
+#  )
+#endif()
 
 if(NOT RCL_MICROROS)
   ament_target_dependencies(${PROJECT_NAME}
@@ -180,9 +180,9 @@ ament_export_dependencies(rosidl_runtime_c)
 ament_export_dependencies(type_description_interfaces)
 ament_export_dependencies(tracetools)
 
-if(NOT RCL_MICROROS)
-  ament_export_dependencies(rcl_yaml_param_parser)
-endif()
+#if(NOT RCL_MICROROS)
+#  ament_export_dependencies(rcl_yaml_param_parser)
+#endif()
 
 if(NOT RCL_MICROROS)
   ament_export_dependencies(${RCL_LOGGING_IMPL})
