@@ -48,6 +48,9 @@ RCL_YAML_PARAM_PARSER_LOCAL
 rcutils_ret_t
 _validate_namespace(const char * namespace_);
 
+int64_t strtoll(const char* nptr, char** endptr, int base) {
+    return 0;
+}
 ///
 /// Check a node name whether it is valid
 ///
