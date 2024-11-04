@@ -46,7 +46,7 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
 endif()
 
 set(${PROJECT_NAME}_sources
-  $<:$<BOOL:${RCL_REMAPPING_ENABLED}>:src/rcl/arguments.c>
+  $<$<BOOL:${RCL_REMAPPING_ENABLED}>:src/rcl/arguments.c>
   src/rcl/client.c
   src/rcl/common.c
   src/rcl/context.c
