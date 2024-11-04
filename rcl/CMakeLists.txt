@@ -64,7 +64,7 @@ set(${PROJECT_NAME}_sources
   src/rcl/localhost.c
   $<$<NOT:$<BOOL:${RCL_MICROROS}>>:src/rcl/logging_rosout.c>
   $<$<NOT:$<BOOL:${RCL_MICROROS}>>:src/rcl/logging.c>
-  $<$<NOT:$<BOOL:${RCL_MICROROS}>>:src/rcl/log_level.c>
+  $<$<BOOL:${RCL_REMAPPING_ENABLED}>:src/rcl/log_level.c>
   src/rcl/network_flow_endpoints.c
   src/rcl/node.c
   src/rcl/node_options.c
