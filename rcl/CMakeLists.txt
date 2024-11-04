@@ -110,9 +110,14 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
 
 if(RCL_REMAPPING_ENABLED)
 target_link_libraries(${PROJECT_NAME} PRIVATE
-  ${RCL_LOGGING_IMPL}::${RCL_LOGGING_IMPL}
   ${service_msgs_TARGETS}
   yaml
+)
+endif()
+
+if(NOT RCL_MICROROS)
+target_link_libraries(${PROJECT_NAME} PRIVATE
+    ${RCL_LOGGING_IMPL}::${RCL_LOGGING_IMPL}
 )
 endif()
 
