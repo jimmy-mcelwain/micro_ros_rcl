@@ -24,9 +24,9 @@ extern "C"
 #include <stdlib.h>
 #include <string.h>
 
-#ifdef RCL_MICROROS_COMPLETE_IMPL
+#ifdef RCL_REMAPPING_ENABLED_TRUE
 #include "rcl/arguments.h"
-#endif // RCL_MICROROS_COMPLETE_IMPL
+#endif // RCL_REMAPPING_ENABLED_TRUE
 #include "rcl/error_handling.h"
 #include "rcl/init_options.h"
 #include "rcl/localhost.h"
@@ -219,7 +219,7 @@ rcl_node_init(
     goto fail;
   }
 
-#ifdef RCL_MICROROS_COMPLETE_IMPL
+#ifdef RCL_REMAPPING_ENABLED_TRUE
   // Remap the node name and namespace if remap rules are given
   rcl_arguments_t * global_args = NULL;
   if (node->impl->options.use_global_arguments) {
@@ -246,7 +246,7 @@ rcl_node_init(
     should_free_local_namespace_ = true;
     local_namespace_ = remapped_namespace;
   }
-#endif // RCL_MICROROS_COMPLETE_IMPL
+#endif // RCL_REMAPPING_ENABLED_TRUE
 
   // compute fully qualfied name of the node.
   if ('/' == local_namespace_[strlen(local_namespace_) - 1]) {
@@ -350,7 +350,7 @@ fail:
       allocator->deallocate(node->impl->graph_guard_condition, allocator->state);
     }
 
-#ifdef RCL_MICROROS_COMPLETE_IMPL
+#ifdef RCL_REMAPPING_ENABLED_TRUE
     if (NULL != node->impl->options.arguments.impl) {
       ret = rcl_arguments_fini(&(node->impl->options.arguments));
       if (ret != RCL_RET_OK) {
@@ -360,7 +360,7 @@ fail:
         );
       }
     }
-#endif // RCL_MICROROS_COMPLETE_IMPL
+#endif // RCL_REMAPPING_ENABLED_TRUE
     allocator->deallocate(node->impl, allocator->state);
   }
   *node = rcl_get_zero_initialized_node();
@@ -413,14 +413,14 @@ rcl_node_fini(rcl_node_t * node)
   // assuming that allocate and deallocate are ok since they are checked in init
   allocator.deallocate((char *)node->impl->logger_name, allocator.state);
   allocator.deallocate((char *)node->impl->fq_name, allocator.state);
-#ifdef RCL_MICROROS_COMPLETE_IMPL
+#ifdef RCL_REMAPPING_ENABLED_TRUE
   if (NULL != node->impl->options.arguments.impl) {
     rcl_ret_t ret = rcl_arguments_fini(&(node->impl->options.arguments));
     if (ret != RCL_RET_OK) {
       return ret;
     }
   }
-#endif // RCL_MICROROS_COMPLETE_IMPL
+#endif // RCL_REMAPPING_ENABLED_TRUE
   allocator.deallocate(node->impl, allocator.state);
   node->impl = NULL;
   RCUTILS_LOG_DEBUG_NAMED(ROS_PACKAGE_NAME, "Node finalized");

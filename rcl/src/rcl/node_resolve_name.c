@@ -75,7 +75,7 @@ rcl_resolve_name(
     goto cleanup;
   }
   // remap topic name
-#ifdef RCL_MICROROS_COMPLETE_IMPL
+#ifdef RCL_REMAPPING_ENABLED_TRUE
   if (!only_expand) {
     ret = rcl_remap_name(
       local_args, global_args, is_service ? RCL_SERVICE_REMAP : RCL_TOPIC_REMAP,
@@ -85,7 +85,7 @@ rcl_resolve_name(
       goto cleanup;
     }
   }
-#endif // RCL_MICROROS_COMPLETE_IMPL
+#endif // RCL_REMAPPING_ENABLED_TRUE
   if (NULL == remapped_topic_name) {
     remapped_topic_name = expanded_topic_name;
     expanded_topic_name = NULL;
@@ -147,18 +147,18 @@ rcl_node_resolve_name(
     return RCL_RET_ERROR;
   }
   rcl_arguments_t * global_args = NULL;
-#ifdef RCL_MICROROS_COMPLETE_IMPL
+#ifdef RCL_REMAPPING_ENABLED_TRUE
   if (node_options->use_global_arguments) {
     global_args = &(node->context->global_arguments);
   }
-#endif // RCL_MICROROS_COMPLETE_IMPL
+#endif // RCL_REMAPPING_ENABLED_TRUE
 
   return rcl_resolve_name(
-#ifdef RCL_MICROROS_COMPLETE_IMPL
+#ifdef RCL_REMAPPING_ENABLED_TRUE
     &(node_options->arguments),
 #else
     NULL,
-#endif // RCL_MICROROS_COMPLETE_IMPL
+#endif // RCL_REMAPPING_ENABLED_TRUE
     global_args,
     input_topic_name,
     rcl_node_get_name(node),

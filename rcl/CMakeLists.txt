@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.5)
 
 project(rcl)
 
+option(RCL_REMAPPING_ENABLED "enable remapping" ON)
 option(RCL_MICROROS "micro-ROS build mode" ON)
 
 find_package(ament_cmake_ros REQUIRED)
@@ -16,7 +17,7 @@ find_package(service_msgs REQUIRED)
 find_package(tracetools REQUIRED)
 find_package(type_description_interfaces REQUIRED)
 
-if(NOT RCL_MICROROS)
+if(RCL_REMAPPING_ENABLED)
   find_package(libyaml_vendor REQUIRED)
   find_package(yaml REQUIRED)
   find_package(rcl_yaml_param_parser REQUIRED)
@@ -45,7 +46,7 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
 endif()
 
 set(${PROJECT_NAME}_sources
-  $<$<NOT:$<BOOL:${RCL_MICROROS}>>:src/rcl/arguments.c>
+  $<:$<BOOL:${RCL_REMAPPING_ENABLED}>:src/rcl/arguments.c>
   src/rcl/client.c
   src/rcl/common.c
   src/rcl/context.c
@@ -107,7 +108,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
   tracetools::tracetools
 )
 
-if(NOT RCL_MICROROS)
+if(RCL_REMAPPING_ENABLED)
 target_link_libraries(${PROJECT_NAME} PRIVATE
   ${RCL_LOGGING_IMPL}::${RCL_LOGGING_IMPL}
   ${service_msgs_TARGETS}
@@ -115,7 +116,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
 )
 endif()
 
-if(NOT RCL_MICROROS)
+if(RCL_REMAPPING_ENABLED)
   ament_target_dependencies(${PROJECT_NAME} PUBLIC
     "rcl_yaml_param_parser"
   )
@@ -131,6 +132,13 @@ if(NOT RCL_MICROROS)
 target_compile_definitions(${PROJECT_NAME}
   PUBLIC
     RCL_MICROROS_COMPLETE_IMPL
+  )
+endif()
+
+if(RCL_REMAPPING_ENABLED)
+target_compile_definitions(${PROJECT_NAME}
+  PUBLIC
+    RCL_REMAPPING_ENABLED_TRUE
   )
 endif()
 
@@ -180,7 +188,7 @@ ament_export_dependencies(rosidl_runtime_c)
 ament_export_dependencies(type_description_interfaces)
 ament_export_dependencies(tracetools)
 
-if(NOT RCL_MICROROS)
+if(RCL_REMAPPING_ENABLED)
   ament_export_dependencies(rcl_yaml_param_parser)
 endif()
 
