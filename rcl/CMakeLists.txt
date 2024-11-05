@@ -68,7 +68,7 @@ set(${PROJECT_NAME}_sources
   src/rcl/network_flow_endpoints.c
   src/rcl/node.c
   src/rcl/node_options.c
-  $<$<NOT:$<BOOL:${RCL_REMAPPING_ENABLED}>>:src/rcl/node_type_cache.c>
+  $<$<BOOL:${RCL_REMAPPING_ENABLED}>:src/rcl/node_type_cache.c>
   src/rcl/publisher.c
   src/rcl/remap.c
   src/rcl/node_resolve_name.c
@@ -80,7 +80,7 @@ set(${PROJECT_NAME}_sources
   src/rcl/time.c
   src/rcl/timer.c
   src/rcl/type_hash.c
-  $<$<NOT:$<BOOL:${RCL_REMAPPING_ENABLED}>>:src/rcl/type_description_conversions.c>
+  $<$<BOOL:${RCL_REMAPPING_ENABLED}>:src/rcl/type_description_conversions.c>
   src/rcl/validate_enclave_name.c
   src/rcl/validate_topic_name.c
   src/rcl/wait.c
@@ -218,3 +218,4 @@ install(
   DIRECTORY include/
   DESTINATION include/${PROJECT_NAME}
 )
+ 
