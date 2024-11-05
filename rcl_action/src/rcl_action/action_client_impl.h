@@ -33,9 +33,9 @@ typedef struct rcl_action_client_impl_s
   size_t wait_set_result_client_index;
   size_t wait_set_feedback_subscription_index;
   size_t wait_set_status_subscription_index;
-#ifdef RCL_MICROROS_COMPLETE_IMPL
+#ifdef RCL_REMAPPING_ENABLED_TRUE
   rosidl_type_hash_t type_hash;
-#endif // RCL_MICROROS_COMPLETE_IMPL
+#endif // RCL_REMAPPING_ENABLED_TRUE
 } rcl_action_client_impl_t;
 
 

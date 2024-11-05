@@ -14,9 +14,9 @@
 
 #include <stdio.h>
 
-#ifdef RCL_MICROROS_COMPLETE_IMPL
+#ifdef RCL_REMAPPING_ENABLED_TRUE
 #include <yaml.h>
-#endif // RCL_MICROROS_COMPLETE_IMPL
+#endif // RCL_REMAPPING_ENABLED_TRUE
 
 #include "rcl/allocator.h"
 #include "rcl/error_handling.h"
@@ -25,7 +25,7 @@
 #include "rcutils/sha256.h"
 #include "type_description_interfaces/msg/type_description.h"
 
-#ifdef RCL_MICROROS_COMPLETE_IMPL
+#ifdef RCL_REMAPPING_ENABLED_TRUE
 static int yaml_write_handler(void * ext, uint8_t * buffer, size_t size)
 {
   rcutils_char_array_t * repr = (rcutils_char_array_t *)ext;
@@ -194,14 +194,14 @@ static int emit_type_description(
   }
   return end_sequence(emitter) && end_mapping(emitter);
 }
-#endif // RCL_MICROROS_COMPLETE_IMPL
+#endif // RCL_REMAPPING_ENABLED_TRUE
 
 rcl_ret_t
 rcl_type_description_to_hashable_json(
   const type_description_interfaces__msg__TypeDescription * type_description,
   rcutils_char_array_t * output_repr)
 {
-#ifdef RCL_MICROROS_COMPLETE_IMPL
+#ifdef RCL_REMAPPING_ENABLED_TRUE
   RCL_CHECK_ARGUMENT_FOR_NULL(type_description, RCL_RET_INVALID_ARGUMENT);
   RCL_CHECK_ARGUMENT_FOR_NULL(output_repr, RCL_RET_INVALID_ARGUMENT);
 
@@ -247,7 +247,7 @@ error:
   (void)type_description;
   (void)output_repr;
   return RCL_RET_UNSUPPORTED;
-#endif // RCL_MICROROS_COMPLETE_IMPL
+#endif // RCL_REMAPPING_ENABLED_TRUE
 }
 
 rcl_ret_t
@@ -255,7 +255,7 @@ rcl_calculate_type_hash(
   const type_description_interfaces__msg__TypeDescription * type_description,
   rosidl_type_hash_t * output_hash)
 {
-#ifdef RCL_MICROROS_COMPLETE_IMPL
+#ifdef RCL_REMAPPING_ENABLED_TRUE
   RCL_CHECK_ARGUMENT_FOR_NULL(type_description, RCL_RET_INVALID_ARGUMENT);
   RCL_CHECK_ARGUMENT_FOR_NULL(output_hash, RCL_RET_INVALID_ARGUMENT);
 
@@ -278,5 +278,5 @@ rcl_calculate_type_hash(
   (void)type_description;
   (void)output_hash;
   return RCL_RET_UNSUPPORTED;
-#endif // RCL_MICROROS_COMPLETE_IMPL
+#endif // RCL_REMAPPING_ENABLED_TRUE
 }

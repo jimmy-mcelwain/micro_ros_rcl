@@ -24,9 +24,9 @@ struct rcl_subscription_impl_s
   rcl_subscription_options_t options;
   rmw_qos_profile_t actual_qos;
   rmw_subscription_t * rmw_handle;
-#ifdef RCL_MICROROS_COMPLETE_IMPL
+#ifdef RCL_REMAPPING_ENABLED_TRUE
   rosidl_type_hash_t type_hash;
-#endif  // RCL_MICROROS_COMPLETE_IMPL
+#endif  // RCL_REMAPPING_ENABLED_TRUE
 };
 
 #endif  // RCL__SUBSCRIPTION_IMPL_H_
