@@ -62,13 +62,13 @@ set(${PROJECT_NAME}_sources
   src/rcl/lexer.c
   src/rcl/lexer_lookahead.c
   src/rcl/localhost.c
-  $<$<NOT:$<BOOL:${RCL_MICROROS}>>:src/rcl/logging_rosout.c>
-  $<$<NOT:$<BOOL:${RCL_MICROROS}>>:src/rcl/logging.c>
+  $<$<BOOL:${RCL_REMAPPING_ENABLED}>:src/rcl/logging_rosout.c>
+  $<$<BOOL:${RCL_REMAPPING_ENABLED}>:src/rcl/logging.c>
   $<$<BOOL:${RCL_REMAPPING_ENABLED}>:src/rcl/log_level.c>
   src/rcl/network_flow_endpoints.c
   src/rcl/node.c
   src/rcl/node_options.c
-  $<$<NOT:$<BOOL:${RCL_MICROROS}>>:src/rcl/node_type_cache.c>
+  $<$<BOOL:${RCL_REMAPPING_ENABLED}>:src/rcl/node_type_cache.c>
   src/rcl/publisher.c
   src/rcl/remap.c
   src/rcl/node_resolve_name.c
@@ -80,7 +80,7 @@ set(${PROJECT_NAME}_sources
   src/rcl/time.c
   src/rcl/timer.c
   src/rcl/type_hash.c
-  $<$<NOT:$<BOOL:${RCL_MICROROS}>>:src/rcl/type_description_conversions.c>
+  $<$<BOOL:${RCL_REMAPPING_ENABLED}>:src/rcl/type_description_conversions.c>
   src/rcl/validate_enclave_name.c
   src/rcl/validate_topic_name.c
   src/rcl/wait.c
