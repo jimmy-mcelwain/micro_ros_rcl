@@ -26,9 +26,9 @@ extern "C"
 #endif // RCL_REMAPPING_ENABLED_TRUE
 #include "rcl/domain_id.h"
 #include "rcl/error_handling.h"
-#ifdef RCL_MICROROS_COMPLETE_IMPL
+#ifdef RCL_REMAPPING_ENABLED_TRUE
 #include "rcl/logging_rosout.h"
-#endif // RCL_MICROROS_COMPLETE_IMPL
+#endif // RCL_REMAPPING_ENABLED_TRUE
 
 rcl_node_options_t
 rcl_node_get_default_options()
@@ -39,13 +39,11 @@ rcl_node_get_default_options()
     .use_global_arguments = true,
   #ifdef RCL_REMAPPING_ENABLED_TRUE
     .arguments = rcl_get_zero_initialized_arguments(),
-  #endif // RCL_REMAPPING_ENABLED_TRUE
-  #ifdef RCL_MICROROS_COMPLETE_IMPL
     .enable_rosout = true,
     .rosout_qos = rcl_qos_profile_rosout_default,
   #else
     .enable_rosout = false,
-  #endif // RCL_MICROROS_COMPLETE_IMPL
+  #endif // RCL_REMAPPING_ENABLED_TRUE
     .enable_type_description_service = false,
   };
   return default_options;

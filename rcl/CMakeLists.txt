@@ -21,14 +21,11 @@ if(RCL_REMAPPING_ENABLED)
   find_package(libyaml_vendor REQUIRED)
   find_package(yaml REQUIRED)
   find_package(rcl_yaml_param_parser REQUIRED)
-endif()
-
-include(cmake/rcl_set_symbol_visibility_hidden.cmake)
-
-if(NOT RCL_MICROROS)
   include(cmake/get_default_rcl_logging_implementation.cmake)
   get_default_rcl_logging_implementation(RCL_LOGGING_IMPL)
 endif()
+
+include(cmake/rcl_set_symbol_visibility_hidden.cmake)
 
 # Default to C11
 if(NOT CMAKE_C_STANDARD)
@@ -62,8 +59,8 @@ set(${PROJECT_NAME}_sources
   src/rcl/lexer.c
   src/rcl/lexer_lookahead.c
   src/rcl/localhost.c
-  $<$<NOT:$<BOOL:${RCL_MICROROS}>>:src/rcl/logging_rosout.c>
-  $<$<NOT:$<BOOL:${RCL_MICROROS}>>:src/rcl/logging.c>
+  $<$<BOOL:${RCL_REMAPPING_ENABLED}>:src/rcl/logging_rosout.c>
+  $<$<BOOL:${RCL_REMAPPING_ENABLED}>:src/rcl/logging.c>
   $<$<BOOL:${RCL_REMAPPING_ENABLED}>:src/rcl/log_level.c>
   src/rcl/network_flow_endpoints.c
   src/rcl/node.c
@@ -110,14 +107,9 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
 
 if(RCL_REMAPPING_ENABLED)
 target_link_libraries(${PROJECT_NAME} PRIVATE
+  ${RCL_LOGGING_IMPL}::${RCL_LOGGING_IMPL}
   ${service_msgs_TARGETS}
   yaml
-)
-endif()
-
-if(NOT RCL_MICROROS)
-target_link_libraries(${PROJECT_NAME} PRIVATE
-    ${RCL_LOGGING_IMPL}::${RCL_LOGGING_IMPL}
 )
 endif()
 
@@ -125,9 +117,6 @@ if(RCL_REMAPPING_ENABLED)
   ament_target_dependencies(${PROJECT_NAME} PUBLIC
     "rcl_yaml_param_parser"
   )
-endif()
-
-if(NOT RCL_MICROROS)
   ament_target_dependencies(${PROJECT_NAME} PUBLIC
     ${RCL_LOGGING_IMPL}
   )
@@ -195,9 +184,6 @@ ament_export_dependencies(tracetools)
 
 if(RCL_REMAPPING_ENABLED)
   ament_export_dependencies(rcl_yaml_param_parser)
-endif()
-
-if(NOT RCL_MICROROS)
   ament_export_dependencies(${RCL_LOGGING_IMPL})
 endif()
 

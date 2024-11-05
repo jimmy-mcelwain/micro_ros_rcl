@@ -30,9 +30,11 @@ extern "C"
 #include "rcl/error_handling.h"
 #include "rcl/init_options.h"
 #include "rcl/localhost.h"
-#ifdef RCL_MICROROS_COMPLETE_IMPL
+#ifdef RCL_REMAPPING_ENABLED_TRUE
 #include "rcl/logging.h"
 #include "rcl/logging_rosout.h"
+#endif //RCL_REMAPPING_ENABLED_TRUE
+#ifdef RCL_MICROROS_COMPLETE_IMPL
 #include "rcl/node_type_cache.h"
 #endif // RCL_MICROROS_COMPLETE_IMPL
 #include "rcl/rcl.h"
@@ -256,11 +258,11 @@ rcl_node_init(
   }
 
   // node logger name
-#ifdef RCL_MICROROS_COMPLETE_IMPL
+#ifdef RCL_REMAPPING_ENABLED_TRUE
   node->impl->logger_name = rcl_create_node_logger_name(name, local_namespace_, allocator);
   RCL_CHECK_FOR_NULL_WITH_MSG(
     node->impl->logger_name, "creating logger name failed", goto fail);
-#endif // RCL_MICROROS_COMPLETE_IMPL
+#endif // RCL_REMAPPING_ENABLED_TRUE
 
   RCUTILS_LOG_DEBUG_NAMED(
     ROS_PACKAGE_NAME, "Using domain ID of '%zu'", context->impl->rmw_context.actual_domain_id);
@@ -293,7 +295,7 @@ rcl_node_init(
     // error message already set
     goto fail;
   }
-#ifdef RCL_MICROROS_COMPLETE_IMPL
+#ifdef RCL_REMAPPING_ENABLED_TRUE
   // The initialization for the rosout publisher requires the node to be in initialized to a point
   // that it can create new topic publishers
   if (rcl_logging_rosout_enabled() && node->impl->options.enable_rosout) {
@@ -303,7 +305,7 @@ rcl_node_init(
       goto fail;
     }
   }
-#endif // RCL_MICROROS_COMPLETE_IMPL
+#endif // RCL_REMAPPING_ENABLED_TRUE
   RCUTILS_LOG_DEBUG_NAMED(ROS_PACKAGE_NAME, "Node initialized");
   ret = RCL_RET_OK;
   TRACEPOINT(
@@ -315,7 +317,7 @@ rcl_node_init(
   goto cleanup;
 fail:
   if (node->impl) {
-#ifdef RCL_MICROROS_COMPLETE_IMPL
+#ifdef RCL_REMAPPING_ENABLED_TRUE
     if (rcl_logging_rosout_enabled() &&
       node->impl->options.enable_rosout &&
       node->impl->logger_name)
@@ -326,7 +328,7 @@ fail:
         ROS_PACKAGE_NAME, "Failed to fini publisher for node: %i", ret);
       allocator->deallocate((char *)node->impl->logger_name, allocator->state);
     }
-#endif // RCL_MICROROS_COMPLETE_IMPL
+#endif // RCL_REMAPPING_ENABLED_TRUE
     if (node->impl->fq_name) {
       allocator->deallocate((char *)node->impl->fq_name, allocator->state);
     }
@@ -390,7 +392,7 @@ rcl_node_fini(rcl_node_t * node)
   rcl_allocator_t allocator = node->impl->options.allocator;
   rcl_ret_t result = RCL_RET_OK;
   rcl_ret_t rcl_ret = RCL_RET_OK;
-#ifdef RCL_MICROROS_COMPLETE_IMPL
+#ifdef RCL_REMAPPING_ENABLED_TRUE
   if (rcl_logging_rosout_enabled() && node->impl->options.enable_rosout) {
     rcl_ret = rcl_logging_rosout_fini_publisher_for_node(node);
     if (rcl_ret != RCL_RET_OK && rcl_ret != RCL_RET_NOT_INIT) {
@@ -398,7 +400,7 @@ rcl_node_fini(rcl_node_t * node)
       result = RCL_RET_ERROR;
     }
   }
-#endif // RCL_MICROROS_COMPLETE_IMPL
+#endif // RCL_REMAPPING_ENABLED_TRUE
   rmw_ret_t rmw_ret = rmw_destroy_node(node->impl->rmw_node_handle);
   if (rmw_ret != RMW_RET_OK) {
     RCL_SET_ERROR_MSG(rmw_get_error_string().str);
