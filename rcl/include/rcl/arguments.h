@@ -33,13 +33,13 @@ extern "C"
 {
 #endif
 
-typedef struct rcl_arguments_impl_s rcl_arguments_impl_t;
+//typedef struct rcl_arguments_impl_s rcl_arguments_impl_t;
 
 /// Hold output of parsing command line arguments.
 typedef struct rcl_arguments_s
 {
   /// Private implementation pointer.
-  rcl_arguments_impl_t * impl;
+  struct rcl_arguments_impl_s * impl;
 } rcl_arguments_t;
 
 /// The command-line flag that delineates the start of ROS arguments.
