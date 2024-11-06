@@ -62,13 +62,9 @@ set(${PROJECT_NAME}_sources
   src/rcl/lexer.c
   src/rcl/lexer_lookahead.c
   src/rcl/localhost.c
-  $<$<BOOL:${RCL_REMAPPING_ENABLED}>:src/rcl/logging_rosout.c>
-  $<$<BOOL:${RCL_REMAPPING_ENABLED}>:src/rcl/logging.c>
-  $<$<BOOL:${RCL_REMAPPING_ENABLED}>:src/rcl/log_level.c>
   src/rcl/network_flow_endpoints.c
   src/rcl/node.c
   src/rcl/node_options.c
-  $<$<BOOL:${RCL_REMAPPING_ENABLED}>:src/rcl/node_type_cache.c>
   src/rcl/publisher.c
   src/rcl/remap.c
   src/rcl/node_resolve_name.c
