@@ -14,9 +14,9 @@
 
 #include <stdio.h>
 
-#ifdef RCL_MICROROS_COMPLETE_IMPL
+#ifdef RCL_REMAPPING_ENABLED_TRUE
 #include <yaml.h>
-#endif // RCL_MICROROS_COMPLETE_IMPL
+#endif // RCL_REMAPPING_ENABLED_TRUE
 
 #include "rcl/allocator.h"
 #include "rcl/error_handling.h"

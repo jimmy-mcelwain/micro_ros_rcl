@@ -34,9 +34,9 @@ extern "C"
 #include "rcl/domain_id.h"
 #include "rcl/error_handling.h"
 #include "rcl/localhost.h"
-#ifdef RCL_MICROROS_COMPLETE_IMPL
+#ifdef RCL_REMAPPING_ENABLED_TRUE
 #include "rcl/logging.h"
-#endif // RCL_MICROROS_COMPLETE_IMPL
+#endif // RCL_REMAPPING_ENABLED_TRUE
 #include "rcl/security.h"
 #include "rcl/validate_enclave_name.h"
 

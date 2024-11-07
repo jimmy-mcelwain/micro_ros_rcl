@@ -23,10 +23,10 @@ extern "C"
 
 #include "rcl/error_handling.h"
 #include "rcl/node.h"
-#ifdef RCL_MICROROS_COMPLETE_IMPL
+#ifdef RCL_REMAPPING_ENABLED_TRUE
 #include "rcl/node_type_cache.h"
 #include "rcutils/env.h"
-#endif // RCL_MICROROS_COMPLETE_IMPL
+#endif // RCL_REMAPPING_ENABLED_TRUE
 #include "rcutils/logging_macros.h"
 #include "rcutils/strdup.h"
 #include "rcutils/types/string_array.h"

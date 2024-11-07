@@ -30,11 +30,11 @@ extern "C"
 #include "rcl/error_handling.h"
 #include "rcl/init_options.h"
 #include "rcl/localhost.h"
-#ifdef RCL_MICROROS_COMPLETE_IMPL
+#ifdef RCL_REMAPPING_ENABLED_TRUE
 #include "rcl/logging.h"
 #include "rcl/logging_rosout.h"
 #include "rcl/node_type_cache.h"
-#endif // RCL_MICROROS_COMPLETE_IMPL
+#endif // RCL_REMAPPING_ENABLED_TRUE
 #include "rcl/rcl.h"
 #include "rcl/remap.h"
 #include "rcl/security.h"

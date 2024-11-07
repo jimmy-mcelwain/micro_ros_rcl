@@ -24,9 +24,9 @@ extern "C"
 
 #include "rcl/error_handling.h"
 #include "rcl/node.h"
-#ifdef RCL_MICROROS_COMPLETE_IMPL
+#ifdef RCL_REMAPPING_ENABLED_TRUE
 #include "rcl/node_type_cache.h"
-#endif // RCL_MICROROS_COMPLETE_IMPL
+#endif // RCL_REMAPPING_ENABLED_TRUE
 #include "rcl/publisher.h"
 #include "rcl/time.h"
 #include "rcl/types.h"
