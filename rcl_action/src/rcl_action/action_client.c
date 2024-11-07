@@ -16,7 +16,7 @@
 extern "C"
 {
 #endif
-
+#include <stdio.h>
 #include "rcl_action/action_client.h"
 #include "./action_client_impl.h"
 
@@ -52,6 +52,7 @@ rcl_action_get_zero_initialized_client(void)
 rcl_action_client_impl_t
 _rcl_action_get_zero_initialized_client_impl(void)
 {
+  printf("_rcl_action_get_zero_initialized_client_impl -- start");
   rcl_client_t null_client = rcl_get_zero_initialized_client();
   rcl_subscription_t null_subscription = rcl_get_zero_initialized_subscription();
   rcl_action_client_impl_t null_action_client = {
@@ -67,10 +68,11 @@ _rcl_action_get_zero_initialized_client_impl(void)
     0,
     0,
     0,
-#ifdef RCL_MICROROS_COMPLETE_IMPL
+#ifdef RCL_REMAPPING_ENABLED_TRUE
     rosidl_get_zero_initialized_type_hash()
-#endif // RCL_MICROROS_COMPLETE_IMPL
+#endif // RCL_REMAPPING_ENABLED_TRUE
   };
+  printf("_rcl_action_get_zero_initialized_client_impl -- end");
   return null_action_client;
 }
 
@@ -97,14 +99,16 @@ _rcl_action_client_fini_impl(
   if (RCL_RET_OK != rcl_subscription_fini(&action_client->impl->status_subscription, node)) {
     ret = RCL_RET_ERROR;
   }
-#ifdef RCL_MICROROS_COMPLETE_IMPL
+  printf("_rcl_action_client_fini_impl -- start");
+#ifdef RCL_REMAPPING_ENABLED_TRUE
   if (
     ROSIDL_TYPE_HASH_VERSION_UNSET != action_client->impl->type_hash.version &&
     RCL_RET_OK != rcl_node_type_cache_unregister_type(node, &action_client->impl->type_hash))
   {
     ret = RCL_RET_ERROR;
   }
-#endif // RCL_MICROROS_COMPLETE_IMPL
+#endif // RCL_REMAPPING_ENABLED_TRUE
+printf("_rcl_action_client_fini_impl -- end, %d", ret);
   allocator.deallocate(action_client->impl->action_name, allocator.state);
   allocator.deallocate(action_client->impl, allocator.state);
   action_client->impl = NULL;
@@ -236,7 +240,8 @@ rcl_action_client_init(
   SUBSCRIPTION_INIT(feedback);
   SUBSCRIPTION_INIT(status);
 
-#ifdef RCL_MICROROS_COMPLETE_IMPL
+#ifdef RCL_REMAPPING_ENABLED_TRUE
+    printf("rcl_action_client_init -- start");
   if (RCL_RET_OK != rcl_node_type_cache_register_type(
       node, type_support->get_type_hash_func(type_support),
       type_support->get_type_description_func(type_support),
@@ -244,10 +249,12 @@ rcl_action_client_init(
   {
     rcutils_reset_error();
     RCL_SET_ERROR_MSG("Failed to register type for action");
+    printf("rcl_action_client_init failed", ret);
     goto fail;
   }
   action_client->impl->type_hash = *type_support->get_type_hash_func(type_support);
-#endif // RCL_MICROROS_COMPLETE_IMPL
+  printf("rcl_action_client_init -- end");
+#endif // RCL_REMAPPING_ENABLED_TRUE
 
   RCUTILS_LOG_DEBUG_NAMED(ROS_PACKAGE_NAME, "Action client initialized");
   return ret;

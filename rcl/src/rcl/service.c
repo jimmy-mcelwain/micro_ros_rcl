@@ -50,9 +50,9 @@ struct rcl_service_impl_s
   rmw_service_t * rmw_handle;
   rcl_service_event_publisher_t * service_event_publisher;
   char * remapped_service_name;
-#ifdef RCL_MICROROS_COMPLETE_IMPL
+#ifdef RCL_REMAPPING_ENABLED_TRUE
   rosidl_type_hash_t type_hash;
-#endif // RCL_MICROROS_COMPLETE_IMPL
+#endif // RCL_REMAPPING_ENABLED_TRUE
 };
 
 rcl_service_t
@@ -192,7 +192,8 @@ rcl_service_init(
 
   // options
   service->impl->options = *options;
-#ifdef RCL_MICROROS_COMPLETE_IMPL
+#ifdef RCL_REMAPPING_ENABLED_TRUE
+  printf("rcl_service_init 1\n");
   if (RCL_RET_OK != rcl_node_type_cache_register_type(
       node, type_support->get_type_hash_func(type_support),
       type_support->get_type_description_func(type_support),
@@ -200,11 +201,13 @@ rcl_service_init(
   {
     rcutils_reset_error();
     RCL_SET_ERROR_MSG("Failed to register type for service");
+    printf("rcl_service_init 2\n");
     ret = RCL_RET_ERROR;
     goto destroy_service;
   }
   service->impl->type_hash = *type_support->get_type_hash_func(type_support);
-#endif // RCL_MICROROS_COMPLETE_IMPL
+  printf("rcl_service_init 3\n");
+#endif // RCL_REMAPPING_ENABLED_TRUE
 
   RCUTILS_LOG_DEBUG_NAMED(ROS_PACKAGE_NAME, "Service initialized");
   TRACEPOINT(
@@ -213,7 +216,7 @@ rcl_service_init(
     (const void *)node,
     (const void *)service->impl->rmw_handle,
     service->impl->remapped_service_name);
-
+printf("rcl_service_init 4\n");
   return RCL_RET_OK;
 
 destroy_service:
@@ -230,7 +233,7 @@ free_remapped_service_name:
 free_service_impl:
   allocator->deallocate(service->impl, allocator->state);
   service->impl = NULL;
-
+  printf("rcl_service_init 5 %d\n", ret);
   return ret;
 }
 
@@ -267,15 +270,18 @@ rcl_service_fini(rcl_service_t * service, rcl_node_t * node)
       RCL_SET_ERROR_MSG(rmw_get_error_string().str);
       result = RCL_RET_ERROR;
     }
-#ifdef RCL_MICROROS_COMPLETE_IMPL
+#ifdef RCL_REMAPPING_ENABLED_TRUE
+    printf("rcl_service_init 6\n");
     if (
       ROSIDL_TYPE_HASH_VERSION_UNSET != service->impl->type_hash.version &&
       RCL_RET_OK != rcl_node_type_cache_unregister_type(node, &service->impl->type_hash))
     {
       RCUTILS_SAFE_FWRITE_TO_STDERR(rcl_get_error_string().str);
+      printf("rcl_service_init 7\n");
       result = RCL_RET_ERROR;
     }
-#endif // RCL_MICROROS_COMPLETE_IMPL
+    printf("rcl_service_init 8\n");
+#endif // RCL_REMAPPING_ENABLED_TRUE
     allocator.deallocate(service->impl->remapped_service_name, allocator.state);
     service->impl->remapped_service_name = NULL;
 
@@ -283,6 +289,7 @@ rcl_service_fini(rcl_service_t * service, rcl_node_t * node)
     service->impl = NULL;
   }
   RCUTILS_LOG_DEBUG_NAMED(ROS_PACKAGE_NAME, "Service finalized");
+  printf("rcl_service_init 9\n");
   return result;
 }
 

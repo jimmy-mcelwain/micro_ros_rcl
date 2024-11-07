@@ -208,14 +208,17 @@ rcl_node_init(
   node->impl->logger_name = NULL;
   node->impl->fq_name = NULL;
   node->impl->options = rcl_node_get_default_options();
-#ifdef RCL_MICROROS_COMPLETE_IMPL
+#ifdef RCL_REMAPPING_ENABLED_TRUE
+printf("node.c rcl_node_init 1");
   node->impl->registered_types_by_type_hash = rcutils_get_zero_initialized_hash_map();
   node->impl->get_type_description_service = rcl_get_zero_initialized_service();
-#endif // RCL_MICROROS_COMPLETE_IMPL
+printf("node.c rcl_node_init 2");
+#endif // RCL_REMAPPING_ENABLED_TRUE
   node->context = context;
   // Initialize node impl.
   ret = rcl_node_options_copy(options, &(node->impl->options));
   if (RCL_RET_OK != ret) {
+    printf("node.c rcl_node_init failed");
     goto fail;
   }
 
@@ -563,7 +566,8 @@ void rcl_node_type_description_service_handle_request(
   const type_description_interfaces__srv__GetTypeDescription_Request * request,
   type_description_interfaces__srv__GetTypeDescription_Response * response)
 {
-#ifdef RCL_MICROROS_COMPLETE_IMPL
+#ifdef RCL_REMAPPING_ENABLED_TRUE
+printf("rcl_node_type_description_service_handle_request 1\n");
   rcl_type_info_t type_info;
   RCL_CHECK_FOR_NULL_WITH_MSG(node, "invalid node handle", return;);
   RCL_CHECK_FOR_NULL_WITH_MSG(node->impl, "invalid node", return;);
@@ -575,6 +579,7 @@ void rcl_node_type_description_service_handle_request(
     RCUTILS_LOG_ERROR_NAMED(
       ROS_PACKAGE_NAME,
       "Failed to initialize service response.");
+      printf("rcl_node_type_description_service_handle_request 2\n");
     return;
   }
   response->successful = false;
@@ -589,6 +594,7 @@ void rcl_node_type_description_service_handle_request(
     rosidl_runtime_c__String__assign(
       &response->failure_reason,
       "Failed to parse type hash");
+      printf("rcl_node_type_description_service_handle_request 3\n");
     return;
   }
 
@@ -598,6 +604,7 @@ void rcl_node_type_description_service_handle_request(
     rosidl_runtime_c__String__assign(
       &response->failure_reason,
       "Type not currently in use by this node");
+      printf("rcl_node_type_description_service_handle_request 4\n");
     return;
   }
 
@@ -607,6 +614,7 @@ void rcl_node_type_description_service_handle_request(
     rosidl_runtime_c__String__assign(
       &response->failure_reason,
       "Failed to populate TypeDescription to response.");
+      printf("rcl_node_type_description_service_handle_request 5\n");
     return;
   }
 
@@ -617,23 +625,30 @@ void rcl_node_type_description_service_handle_request(
       rosidl_runtime_c__String__assign(
         &response->failure_reason,
         "Failed to populate TypeSource_Sequence to response.");
+        printf("rcl_node_type_description_service_handle_request 6\n");
       return;
     }
   }
 
   response->successful = true;
-#endif //RCL_MICROROS
+#endif //RCL_REMAPPING_ENABLED_TRUE
+printf("rcl_node_type_description_service_handle_request 7\n");
 }
 
 rcl_ret_t rcl_node_type_description_service_init(rcl_node_t * node)
 {
-#ifdef RCL_MICROROS_COMPLETE_IMPL
+
+#ifdef RCL_REMAPPING_ENABLED_TRUE
+printf("rcl_node_type_description_service_init 1\n");
   RCL_CHECK_ARGUMENT_FOR_NULL(node, RCL_RET_INVALID_ARGUMENT);
+  printf("rcl_node_type_description_service_init 2\n");
   RCL_CHECK_ARGUMENT_FOR_NULL(node->impl, RCL_RET_NODE_INVALID);
+  printf("rcl_node_type_description_service_init 3\n");
 
   rcl_ret_t ret;
 
   if (rcl_service_is_valid(&node->impl->get_type_description_service)) {
+    printf("rcl_node_type_description_service_init 4\n");
     return RCL_RET_ALREADY_INIT;
   }
   rcl_reset_error();  // Reset the error message set by rcl_service_is_valid()
@@ -645,7 +660,7 @@ rcl_ret_t rcl_node_type_description_service_init(rcl_node_t * node)
     GetTypeDescription);
   rcl_service_options_t service_ops = rcl_service_get_default_options();
   rcl_allocator_t allocator = node->context->impl->allocator;
-
+printf("rcl_node_type_description_service_init 5\n");
   // Construct service name
   ret = rcl_node_resolve_name(
     node, "~/get_type_description",
@@ -653,6 +668,7 @@ rcl_ret_t rcl_node_type_description_service_init(rcl_node_t * node)
   if (RCL_RET_OK != ret) {
     RCL_SET_ERROR_MSG(
       "Failed to construct ~/get_type_description service name");
+      printf("rcl_node_type_description_service_init 6\n");
     return ret;
   }
 
@@ -660,18 +676,21 @@ rcl_ret_t rcl_node_type_description_service_init(rcl_node_t * node)
   ret = rcl_service_init(
     &node->impl->get_type_description_service, node,
     type_support, service_name, &service_ops);
+    printf("rcl_node_type_description_service_init 7\n");
   allocator.deallocate(service_name, allocator.state);
 
   return ret;
 #else
   (void)node;
+  printf("rcl_node_type_description_service_init 8\n");
   return RCL_RET_UNSUPPORTED;
-#endif //RCL_MICROROS
+  printf("rcl_node_type_description_service_init 9\n");
+#endif //RCL_REMAPPING_ENABLED_TRUE
 }
 
 rcl_ret_t rcl_node_type_description_service_fini(rcl_node_t * node)
 {
-#ifdef RCL_MICROROS_COMPLETE_IMPL
+#ifdef RCL_REMAPPING_ENABLED_TRUE
   RCL_CHECK_ARGUMENT_FOR_NULL(node, RCL_RET_INVALID_ARGUMENT);
   RCL_CHECK_ARGUMENT_FOR_NULL(node->impl, RCL_RET_NODE_INVALID);
   if (!rcl_service_is_valid(&node->impl->get_type_description_service)) {
@@ -696,7 +715,7 @@ rcl_ret_t rcl_node_get_type_description_service(
   const rcl_node_t * node,
   rcl_service_t ** service_out)
 {
-#ifdef RCL_MICROROS_COMPLETE_IMPL
+#ifdef RCL_REMAPPING_ENABLED_TRUE
   RCL_CHECK_ARGUMENT_FOR_NULL(node, RCL_RET_INVALID_ARGUMENT);
   RCL_CHECK_ARGUMENT_FOR_NULL(node->impl, RCL_RET_NODE_INVALID);
   RCL_CHECK_ARGUMENT_FOR_NULL(service_out, RCL_RET_SERVICE_INVALID);

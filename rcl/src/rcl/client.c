@@ -181,19 +181,22 @@ rcl_client_init(
   // options
   client->impl->options = *options;
   atomic_init(&client->impl->sequence_number, 0);
-#ifdef RCL_MICROROS_COMPLETE_IMPL
+#ifdef RCL_REMAPPING_ENABLED_TRUE
+  printf("Client.c 1\n");
   if (RCL_RET_OK != rcl_node_type_cache_register_type(
       node, type_support->get_type_hash_func(type_support),
       type_support->get_type_description_func(type_support),
       type_support->get_type_description_sources_func(type_support)))
   {
+    printf("Client.c 1.4\n");
     rcutils_reset_error();
     RCL_SET_ERROR_MSG("Failed to register type for client");
     ret = RCL_RET_ERROR;
     goto destroy_client;
   }
+  printf("Client.c 2\n");
   client->impl->type_hash = *type_support->get_type_hash_func(type_support);
-#endif // RCL_MICROROS_COMPLETE_IMPL
+#endif // RCL_REMAPPING_ENABLED_TRUE
 
   RCUTILS_LOG_DEBUG_NAMED(ROS_PACKAGE_NAME, "Client initialized");
   TRACEPOINT(
@@ -202,7 +205,7 @@ rcl_client_init(
     (const void *)node,
     (const void *)client->impl->rmw_handle,
     client->impl->remapped_service_name);
-
+  printf("Client.c 3\n");
   return RCL_RET_OK;
 
 destroy_client:
@@ -255,15 +258,18 @@ rcl_client_fini(rcl_client_t * client, rcl_node_t * node)
       RCL_SET_ERROR_MSG(rmw_get_error_string().str);
       result = RCL_RET_ERROR;
     }
-#ifdef RCL_MICROROS_COMPLETE_IMPL
+#ifdef RCL_REMAPPING_ENABLED_TRUE
+printf("rcl_client_fini 1\n");
     if (
       ROSIDL_TYPE_HASH_VERSION_UNSET != client->impl->type_hash.version &&
       RCL_RET_OK != rcl_node_type_cache_unregister_type(node, &client->impl->type_hash))
     {
       RCUTILS_SAFE_FWRITE_TO_STDERR(rcl_get_error_string().str);
+      printf("rcl_client_fini 2\n");
       result = RCL_RET_ERROR;
     }
-#endif // RCL_MICROROS_COMPLETE_IMPL
+    printf("rcl_client_fini 3\n");
+#endif // RCL_REMAPPING_ENABLED_TRUE
     allocator.deallocate(client->impl->remapped_service_name, allocator.state);
     client->impl->remapped_service_name = NULL;
 
@@ -271,6 +277,7 @@ rcl_client_fini(rcl_client_t * client, rcl_node_t * node)
     client->impl = NULL;
   }
   RCUTILS_LOG_DEBUG_NAMED(ROS_PACKAGE_NAME, "Client finalized");
+  printf("rcl_client_fini 4 %d\n", result);
   return result;
 }
 

@@ -25,7 +25,7 @@
 #include "rcutils/sha256.h"
 #include "type_description_interfaces/msg/type_description.h"
 
-#ifdef RCL_MICROROS_COMPLETE_IMPL
+#ifdef RCL_REMAPPING_ENABLED_TRUE
 static int yaml_write_handler(void * ext, uint8_t * buffer, size_t size)
 {
   rcutils_char_array_t * repr = (rcutils_char_array_t *)ext;
@@ -194,14 +194,15 @@ static int emit_type_description(
   }
   return end_sequence(emitter) && end_mapping(emitter);
 }
-#endif // RCL_MICROROS_COMPLETE_IMPL
+#endif // RCL_REMAPPING_ENABLED_TRUE
 
 rcl_ret_t
 rcl_type_description_to_hashable_json(
   const type_description_interfaces__msg__TypeDescription * type_description,
   rcutils_char_array_t * output_repr)
 {
-#ifdef RCL_MICROROS_COMPLETE_IMPL
+#ifdef RCL_REMAPPING_ENABLED_TRUE
+  printf("rcl_type_description_to_hashable_json 1\n");
   RCL_CHECK_ARGUMENT_FOR_NULL(type_description, RCL_RET_INVALID_ARGUMENT);
   RCL_CHECK_ARGUMENT_FOR_NULL(output_repr, RCL_RET_INVALID_ARGUMENT);
 
@@ -209,6 +210,7 @@ rcl_type_description_to_hashable_json(
   yaml_event_t event;
 
   if (!yaml_emitter_initialize(&emitter)) {
+    printf("rcl_type_description_to_hashable_json 2\n");
     goto error;
   }
 
@@ -233,21 +235,25 @@ rcl_type_description_to_hashable_json(
       yaml_stream_end_event_initialize(&event) &&
       yaml_emitter_emit(&emitter, &event)))
   {
+    printf("rcl_type_description_to_hashable_json 3\n");
     goto error;
   }
 
   yaml_emitter_delete(&emitter);
+  printf("rcl_type_description_to_hashable_json 4\n");
   return RCL_RET_OK;
 
 error:
   rcl_set_error_state(emitter.problem, __FILE__, __LINE__);
   yaml_emitter_delete(&emitter);
+  printf("rcl_type_description_to_hashable_json 5\n");
   return RCL_RET_ERROR;
 #else
   (void)type_description;
   (void)output_repr;
+  printf("rcl_type_description_to_hashable_json 6\n");
   return RCL_RET_UNSUPPORTED;
-#endif // RCL_MICROROS_COMPLETE_IMPL
+#endif // RCL_REMAPPING_ENABLED_TRUE
 }
 
 rcl_ret_t
@@ -255,9 +261,12 @@ rcl_calculate_type_hash(
   const type_description_interfaces__msg__TypeDescription * type_description,
   rosidl_type_hash_t * output_hash)
 {
-#ifdef RCL_MICROROS_COMPLETE_IMPL
+#ifdef RCL_REMAPPING_ENABLED_TRUE
+  printf("rcl_calculate_type_hash 1\n");
   RCL_CHECK_ARGUMENT_FOR_NULL(type_description, RCL_RET_INVALID_ARGUMENT);
+  printf("rcl_calculate_type_hash 2\n");
   RCL_CHECK_ARGUMENT_FOR_NULL(output_hash, RCL_RET_INVALID_ARGUMENT);
+  printf("rcl_calculate_type_hash 3\n");
 
   rcl_ret_t result = RCL_RET_OK;
   rcutils_char_array_t msg_repr = rcutils_get_zero_initialized_char_array();
@@ -271,12 +280,15 @@ rcl_calculate_type_hash(
     // Last item in char_array is null terminator, which should not be hashed.
     rcutils_sha256_update(&sha_ctx, (const uint8_t *)msg_repr.buffer, msg_repr.buffer_length - 1);
     rcutils_sha256_final(&sha_ctx, output_hash->value);
+    printf("rcl_calculate_type_hash 4\n");
   }
   result = rcutils_char_array_fini(&msg_repr);
+  printf("rcl_calculate_type_hash 5 %d\n", result);
   return result;
 #else
+printf("rcl_calculate_type_hash 6\n");
   (void)type_description;
   (void)output_hash;
   return RCL_RET_UNSUPPORTED;
-#endif // RCL_MICROROS_COMPLETE_IMPL
+#endif // RCL_REMAPPING_ENABLED_TRUE
 }
