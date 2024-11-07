@@ -127,18 +127,15 @@ rcl_subscription_init(
   // options
   subscription->impl->options = *options;
 #ifdef RCL_REMAPPING_ENABLED_TRUE
-  printf("rcl_subscription_init 1\n");
   if (RCL_RET_OK != rcl_node_type_cache_register_type(
       node, type_support->get_type_hash_func(type_support),
       type_support->get_type_description_func(type_support),
       type_support->get_type_description_sources_func(type_support)))
   {
-    printf("rcl_subscription_init 2\n");
     rcutils_reset_error();
     RCL_SET_ERROR_MSG("Failed to register type for subscription");
     goto fail;
   }
-  printf("rcl_subscription_init 3\n");
   subscription->impl->type_hash = *type_support->get_type_hash_func(type_support);
 #endif // RCL_REMAPPING_ENABLED_TRUE
 
@@ -177,7 +174,6 @@ fail:
   // Fall through to cleanup
 cleanup:
   allocator->deallocate(remapped_topic_name, allocator->state);
-  printf("rcl_subscription_init 5 %d\n", ret);
   return ret;
 }
 
@@ -214,23 +210,18 @@ rcl_subscription_fini(rcl_subscription_t * subscription, rcl_node_t * node)
       result = RCL_RET_ERROR;
     }
 #ifdef RCL_REMAPPING_ENABLED_TRUE
-  printf("rcl_subscription_fini 1\n");
     if (
       ROSIDL_TYPE_HASH_VERSION_UNSET != subscription->impl->type_hash.version &&
       RCL_RET_OK != rcl_node_type_cache_unregister_type(node, &subscription->impl->type_hash))
     {
       RCUTILS_SAFE_FWRITE_TO_STDERR(rcl_get_error_string().str);
       RCUTILS_SAFE_FWRITE_TO_STDERR("\n");
-      printf("rcl_subscription_fini 2\n");
       result = RCL_RET_ERROR;
     }
-    printf("rcl_subscription_fini 3\n");
 #endif // RCL_REMAPPING_ENABLED_TRUE
     allocator.deallocate(subscription->impl, allocator.state);
     subscription->impl = NULL;
-    printf("rcl_subscription_fini 4\n");
   }
-  printf("rcl_subscription_fini 5\n");
   RCUTILS_LOG_DEBUG_NAMED(ROS_PACKAGE_NAME, "Subscription finalized");
   return result;
 }
@@ -251,22 +242,17 @@ rcl_subscription_get_default_options()
   default_options.disable_loaned_message = true;
 
 #ifdef RCL_REMAPPING_ENABLED_TRUE
-  printf("rcl_subscription_get_default_options 1");
   const char * env_val = NULL;
   const char * env_error_str = rcutils_get_env(RCL_DISABLE_LOANED_MESSAGES_ENV_VAR, &env_val);
-  printf("rcl_subscription_get_default_options 2");
   if (NULL != env_error_str) {
     RCUTILS_SAFE_FWRITE_TO_STDERR("Failed to get disable_loaned_message: ");
     RCUTILS_SAFE_FWRITE_TO_STDERR_WITH_FORMAT_STRING(
       "Error getting env var: '" RCUTILS_STRINGIFY(RCL_DISABLE_LOANED_MESSAGES_ENV_VAR) "': %s\n",
       env_error_str);
-      printf("rcl_subscription_get_default_options 3 %s",env_error_str);
   } else {
     default_options.disable_loaned_message = !(strcmp(env_val, "0") == 0);
-    printf("rcl_subscription_get_default_options 4");
   }
 #endif // RCL_REMAPPING_ENABLED_TRUE
-  printf("rcl_subscription_get_default_options 5");
   return default_options;
 }
 

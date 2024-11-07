@@ -140,33 +140,24 @@ rcl_ret_t rcl_node_type_cache_register_type(
   const rosidl_runtime_c__type_description__TypeDescription * type_description,
   const rosidl_runtime_c__type_description__TypeSource__Sequence * type_description_sources)
 {
-  printf("1\n");
   RCL_CHECK_ARGUMENT_FOR_NULL(node, RCL_RET_INVALID_ARGUMENT);
-  printf("2\n");
   RCL_CHECK_ARGUMENT_FOR_NULL(node->impl, RCL_RET_NODE_INVALID);
-  printf("3\n");
   RCL_CHECK_ARGUMENT_FOR_NULL(type_hash, RCL_RET_INVALID_ARGUMENT);
-  printf("4\n");
   RCL_CHECK_ARGUMENT_FOR_NULL(type_description, RCL_RET_INVALID_ARGUMENT);
-  printf("5\n");
   RCL_CHECK_ARGUMENT_FOR_NULL(type_description_sources, RCL_RET_INVALID_ARGUMENT);
-  printf("6\n");
 
   rcl_type_info_with_registration_count_t type_info_with_registrations;
 
   const rcutils_ret_t rcutils_ret = rcutils_hash_map_get(
     &node->impl->registered_types_by_type_hash,
     type_hash, &type_info_with_registrations);
-  printf("7\n");
 
   if (RCUTILS_RET_OK == rcutils_ret) {
     // If the type already exists, we only have to increment the registration
     // count.
-    printf("8\n");
 
     type_info_with_registrations.num_registrations++;
   } else if (RCUTILS_RET_NOT_FOUND == rcutils_ret) {
-    printf("9\n");
 
     // First registration of this type
     type_info_with_registrations.num_registrations = 1;
@@ -174,31 +165,25 @@ rcl_ret_t rcl_node_type_cache_register_type(
     // Convert type description struct to type description message struct.
     type_info_with_registrations.type_info.type_description =
       rcl_convert_type_description_runtime_to_msg(type_description);
-    printf("10\n");
 
     RCL_CHECK_FOR_NULL_WITH_MSG(
       type_info_with_registrations.type_info.type_description,
       "converting type description struct failed", return RCL_RET_ERROR);
-    printf("11\n");
 
     // Convert type sources struct to type sources message struct.
     type_info_with_registrations.type_info.type_sources =
       rcl_convert_type_source_sequence_runtime_to_msg(type_description_sources);
-      printf("12\n");
 
     RCL_CHECK_FOR_NULL_WITH_MSG(
       type_info_with_registrations.type_info.type_sources,
       "converting type sources struct failed",
       type_description_interfaces__msg__TypeDescription__destroy(
         type_info_with_registrations.type_info.type_description);
-        printf("13\n");
 
       return RCL_RET_ERROR);
   } else {
-    printf("14\n");
     return RCL_RET_ERROR;
   }
-printf("15\n");
 
   // Update the hash map entry.
   if (RCUTILS_RET_OK !=
@@ -211,11 +196,9 @@ printf("15\n");
       type_info_with_registrations.type_info.type_description);
     type_description_interfaces__msg__TypeSource__Sequence__destroy(
       type_info_with_registrations.type_info.type_sources);
-      printf("16\n");
 
     return RCL_RET_ERROR;
   }
-printf("17\n");
 
   return RCL_RET_OK;
 }
@@ -225,16 +208,12 @@ rcl_ret_t rcl_node_type_cache_unregister_type(
   const rosidl_type_hash_t * type_hash)
 {
   rcl_type_info_with_registration_count_t type_info;
-printf("19\n");
 
   RCL_CHECK_ARGUMENT_FOR_NULL(node, RCL_RET_INVALID_ARGUMENT);
-  printf("20\n");
 
   RCL_CHECK_ARGUMENT_FOR_NULL(node->impl, RCL_RET_NODE_INVALID);
-  printf("21\n");
 
   RCL_CHECK_ARGUMENT_FOR_NULL(type_hash, RCL_RET_INVALID_ARGUMENT);
-printf("22\n");
 
   if (RCUTILS_RET_OK !=
     rcutils_hash_map_get(
@@ -244,7 +223,6 @@ printf("22\n");
     RCL_SET_ERROR_MSG("Failed to unregister type, hash not present in map.");
     return RCL_RET_ERROR;
   }
-printf("23\n");
 
   if (--type_info.num_registrations > 0) {
     if (RCUTILS_RET_OK !=
@@ -253,7 +231,6 @@ printf("23\n");
         type_hash, &type_info))
     {
       RCL_SET_ERROR_MSG("Failed to update type info");
-      printf("24\n");
 
       return RCL_RET_ERROR;
     }
@@ -264,7 +241,6 @@ printf("23\n");
         type_hash))
     {
       RCL_SET_ERROR_MSG("Failed to unregister type info");
-      printf("25\n");
 
       return RCL_RET_ERROR;
     }
@@ -274,7 +250,6 @@ printf("23\n");
     type_description_interfaces__msg__TypeSource__Sequence__destroy(
       type_info.type_info.type_sources);
   }
-printf("26\n");
 
   return RCL_RET_OK;
 }

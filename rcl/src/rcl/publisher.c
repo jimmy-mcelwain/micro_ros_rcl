@@ -131,7 +131,6 @@ rcl_publisher_init(
   // options
   publisher->impl->options = *options;
 #ifdef RCL_REMAPPING_ENABLED_TRUE
-printf("rcl_publisher_init 1\n");
 
   if (RCL_RET_OK != rcl_node_type_cache_register_type(
       node, type_support->get_type_hash_func(type_support),
@@ -140,11 +139,9 @@ printf("rcl_publisher_init 1\n");
   {
     rcutils_reset_error();
     RCL_SET_ERROR_MSG("Failed to register type for subscription");
-    printf("rcl_publisher_init 2\n");
     goto fail;
   }
   publisher->impl->type_hash = *type_support->get_type_hash_func(type_support);
-  printf("rcl_publisher_init 3\n");
 #endif // RCL_REMAPPING_ENABLED_TRUE
 
   RCUTILS_LOG_DEBUG_NAMED(ROS_PACKAGE_NAME, "Publisher initialized");
@@ -157,7 +154,6 @@ printf("rcl_publisher_init 1\n");
     (const void *)publisher->impl->rmw_handle,
     remapped_topic_name,
     options->qos.depth);
-printf("rcl_publisher_init 4\n");
   goto cleanup;
 fail:
   if (publisher->impl) {
@@ -176,9 +172,7 @@ fail:
 
   ret = fail_ret;
   // Fall through to cleanup
-  printf("rcl_publisher_init 5\n");
 cleanup:
-printf("rcl_publisher_init 6\n");
   allocator->deallocate(remapped_topic_name, allocator->state);
   return ret;
 }
@@ -211,22 +205,18 @@ rcl_publisher_fini(rcl_publisher_t * publisher, rcl_node_t * node)
       result = RCL_RET_ERROR;
     }
 #ifdef RCL_REMAPPING_ENABLED_TRUE
-printf("rcl_publisher_init 1\n");
     if (
       ROSIDL_TYPE_HASH_VERSION_UNSET != publisher->impl->type_hash.version &&
       RCL_RET_OK != rcl_node_type_cache_unregister_type(node, &publisher->impl->type_hash))
     {
       RCUTILS_SAFE_FWRITE_TO_STDERR(rcl_get_error_string().str);
       result = RCL_RET_ERROR;
-      printf("rcl_publisher_init 2\n");
     }
-    printf("rcl_publisher_init 3\n");
 #endif // RCL_REMAPPING_ENABLED_TRUE
     allocator.deallocate(publisher->impl, allocator.state);
     publisher->impl = NULL;
   }
   RCUTILS_LOG_DEBUG_NAMED(ROS_PACKAGE_NAME, "Publisher finalized");
-  printf("rcl_publisher_init 3 %d\n", result);
   return result;
 }
 
