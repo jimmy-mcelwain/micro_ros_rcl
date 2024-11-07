@@ -27,22 +27,22 @@ extern "C"
 
 #include "tracetools/tracetools.h"
 
-#ifdef RCL_REMAPPING_ENABLED_TRUE
+#ifdef RCL_MICROROS_COMPLETE_IMPL
 #include "rcl/arguments.h"
-#endif // RCL_REMAPPING_ENABLED_TRUE
+#endif // RCL_MICROROS_COMPLETE_IMPL
 #include "rcl/discovery_options.h"
 #include "rcl/domain_id.h"
 #include "rcl/error_handling.h"
 #include "rcl/localhost.h"
-#ifdef RCL_REMAPPING_ENABLED_TRUE
+#ifdef RCL_MICROROS_COMPLETE_IMPL
 #include "rcl/logging.h"
-#endif // RCL_REMAPPING_ENABLED_TRUE
+#endif // RCL_MICROROS_COMPLETE_IMPL
 #include "rcl/security.h"
 #include "rcl/validate_enclave_name.h"
 
-#ifdef RCL_REMAPPING_ENABLED_TRUE
+#ifdef RCL_MICROROS_COMPLETE_IMPL
 #include "./arguments_impl.h"
-#endif // RCL_REMAPPING_ENABLED_TRUE
+#endif // RCL_MICROROS_COMPLETE_IMPL
 #include "./common.h"
 #include "./context_impl.h"
 #include "./init_options_impl.h"
@@ -85,10 +85,10 @@ rcl_init(
     return RCL_RET_ALREADY_INIT;
   }
 
-#ifdef RCL_REMAPPING_ENABLED_TRUE
+#ifdef RCL_MICROROS_COMPLETE_IMPL
   // Zero initialize global arguments.
   context->global_arguments = rcl_get_zero_initialized_arguments();
-#endif // RCL_REMAPPING_ENABLED_TRUE
+#endif // RCL_MICROROS_COMPLETE_IMPL
 
   // Setup impl for context.
   // use zero_allocate so the cleanup function will not try to clean up uninitialized parts later
@@ -130,7 +130,7 @@ rcl_init(
     }
   }
 
-#ifdef RCL_REMAPPING_ENABLED_TRUE
+#ifdef RCL_MICROROS_COMPLETE_IMPL
   // Parse the ROS specific arguments.
   ret = rcl_parse_arguments(argc, argv, allocator, &context->global_arguments);
   if (RCL_RET_OK != ret) {
@@ -138,7 +138,7 @@ rcl_init(
     RCUTILS_LOG_ERROR_NAMED(ROS_PACKAGE_NAME, "Failed to parse global arguments");
     goto fail;
   }
-#endif // RCL_REMAPPING_ENABLED_TRUE
+#endif // RCL_MICROROS_COMPLETE_IMPL
 
   // Set the instance id.
   static uint32_t next_instance_id = 0;
@@ -262,7 +262,7 @@ rcl_init(
       "\t%s", discovery_options->static_peers[ii].peer_address);
   }
 
-#ifdef RCL_REMAPPING_ENABLED_TRUE
+#ifdef RCL_MICROROS_COMPLETE_IMPL
   if (context->global_arguments.impl->enclave) {
     context->impl->init_options.impl->rmw_init_options.enclave = rcutils_strdup(
       context->global_arguments.impl->enclave,
@@ -277,7 +277,7 @@ rcl_init(
     fail_ret = RCL_RET_BAD_ALLOC;
     goto fail;
   }
-#endif //RCL_REMAPPING_ENABLED_TRUE
+#endif //RCL_MICROROS_COMPLETE_IMPL
 
   int validation_result;
   size_t invalid_index;

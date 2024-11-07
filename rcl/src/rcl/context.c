@@ -33,9 +33,9 @@ rcl_get_zero_initialized_context(void)
     .instance_id_storage = 0,
   };
   // this is not constexpr so it cannot be in the struct initialization
-#ifdef RCL_REMAPPING_ENABLED_TRUE
+#ifdef RCL_MICROROS_COMPLETE_IMPL
   context.global_arguments = rcl_get_zero_initialized_arguments();
-#endif // RCL_REMAPPING_ENABLED_TRUE
+#endif // RCL_MICROROS_COMPLETE_IMPL
   return context;
 }
 
@@ -108,7 +108,7 @@ __cleanup_context(rcl_context_t * context)
   // reset the instance id to 0 to indicate "invalid" (should already be 0, but this is defensive)
   context->instance_id_storage = 0;
 
-#ifdef RCL_REMAPPING_ENABLED_TRUE
+#ifdef RCL_MICROROS_COMPLETE_IMPL
   // clean up global_arguments if initialized
   if (NULL != context->global_arguments.impl) {
     ret = rcl_arguments_fini(&(context->global_arguments));
@@ -121,7 +121,7 @@ __cleanup_context(rcl_context_t * context)
       rcl_reset_error();
     }
   }
-#endif // RCL_REMAPPING_ENABLED_TRUE
+#endif // RCL_MICROROS_COMPLETE_IMPL
 
   // if impl is null, nothing else can be cleaned up
   if (NULL != context->impl) {

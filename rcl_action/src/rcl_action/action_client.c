@@ -25,9 +25,9 @@ extern "C"
 #include "rcl_action/types.h"
 #include "rcl_action/wait.h"
 
-#ifdef RCL_REMAPPING_ENABLED_TRUE
+#ifdef RCL_MICROROS_COMPLETE_IMPL
 #include "rcl/node_type_cache.h"
-#endif // RCL_REMAPPING_ENABLED_TRUE
+#endif // RCL_MICROROS_COMPLETE_IMPL
 #include "rcl/client.h"
 #include "rcl/error_handling.h"
 #include "rcl/graph.h"
@@ -67,9 +67,9 @@ _rcl_action_get_zero_initialized_client_impl(void)
     0,
     0,
     0,
-#ifdef RCL_REMAPPING_ENABLED_TRUE
+#ifdef RCL_MICROROS_COMPLETE_IMPL
     rosidl_get_zero_initialized_type_hash()
-#endif // RCL_REMAPPING_ENABLED_TRUE
+#endif // RCL_MICROROS_COMPLETE_IMPL
   };
   return null_action_client;
 }
@@ -97,14 +97,14 @@ _rcl_action_client_fini_impl(
   if (RCL_RET_OK != rcl_subscription_fini(&action_client->impl->status_subscription, node)) {
     ret = RCL_RET_ERROR;
   }
-#ifdef RCL_REMAPPING_ENABLED_TRUE
+#ifdef RCL_MICROROS_COMPLETE_IMPL
   if (
     ROSIDL_TYPE_HASH_VERSION_UNSET != action_client->impl->type_hash.version &&
     RCL_RET_OK != rcl_node_type_cache_unregister_type(node, &action_client->impl->type_hash))
   {
     ret = RCL_RET_ERROR;
   }
-#endif // RCL_REMAPPING_ENABLED_TRUE
+#endif // RCL_MICROROS_COMPLETE_IMPL
   allocator.deallocate(action_client->impl->action_name, allocator.state);
   allocator.deallocate(action_client->impl, allocator.state);
   action_client->impl = NULL;
@@ -236,7 +236,7 @@ rcl_action_client_init(
   SUBSCRIPTION_INIT(feedback);
   SUBSCRIPTION_INIT(status);
 
-#ifdef RCL_REMAPPING_ENABLED_TRUE
+#ifdef RCL_MICROROS_COMPLETE_IMPL
   if (RCL_RET_OK != rcl_node_type_cache_register_type(
       node, type_support->get_type_hash_func(type_support),
       type_support->get_type_description_func(type_support),
@@ -247,7 +247,7 @@ rcl_action_client_init(
     goto fail;
   }
   action_client->impl->type_hash = *type_support->get_type_hash_func(type_support);
-#endif // RCL_REMAPPING_ENABLED_TRUE
+#endif // RCL_MICROROS_COMPLETE_IMPL
 
   RCUTILS_LOG_DEBUG_NAMED(ROS_PACKAGE_NAME, "Action client initialized");
   return ret;

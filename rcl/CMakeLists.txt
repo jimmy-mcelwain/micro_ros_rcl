@@ -143,7 +143,7 @@ endif()
 if(RCL_REMAPPING_ENABLED)
 target_compile_definitions(${PROJECT_NAME}
   PUBLIC
-    RCL_REMAPPING_ENABLED_TRUE
+    RCL_MICROROS_COMPLETE_IMPL
   )
 endif()
 

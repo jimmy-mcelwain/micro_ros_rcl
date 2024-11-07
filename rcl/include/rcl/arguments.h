@@ -22,11 +22,11 @@
 #include "rcl/macros.h"
 #include "rcl/types.h"
 #include "rcl/visibility_control.h"
-#ifdef RCL_REMAPPING_ENABLED_TRUE
+#ifdef RCL_MICROROS_COMPLETE_IMPL
 #include "rcl_yaml_param_parser/types.h"
 #else
 typedef bool rcl_params_t;
-#endif // RCL_REMAPPING_ENABLED_TRUE
+#endif // RCL_MICROROS_COMPLETE_IMPL
 
 #ifdef __cplusplus
 extern "C"

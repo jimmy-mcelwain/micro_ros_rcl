@@ -17,11 +17,11 @@
 
 #include "rcl/arguments.h"
 #include "rcl/log_level.h"
-#ifdef RCL_REMAPPING_ENABLED_TRUE
+#ifdef RCL_MICROROS_COMPLETE_IMPL
 #include "rcl_yaml_param_parser/types.h"
 #else
 // typedef bool rcl_params_t;
-#endif // RCL_REMAPPING_ENABLED_TRUE
+#endif // RCL_MICROROS_COMPLETE_IMPL
 #include "./remap_impl.h"
 
 #ifdef __cplusplus

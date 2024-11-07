@@ -24,17 +24,17 @@ extern "C"
 #include <stdlib.h>
 #include <string.h>
 
-#ifdef RCL_REMAPPING_ENABLED_TRUE
+#ifdef RCL_MICROROS_COMPLETE_IMPL
 #include "rcl/arguments.h"
-#endif // RCL_REMAPPING_ENABLED_TRUE
+#endif // RCL_MICROROS_COMPLETE_IMPL
 #include "rcl/error_handling.h"
 #include "rcl/init_options.h"
 #include "rcl/localhost.h"
-#ifdef RCL_REMAPPING_ENABLED_TRUE
+#ifdef RCL_MICROROS_COMPLETE_IMPL
 #include "rcl/logging.h"
 #include "rcl/logging_rosout.h"
 #include "rcl/node_type_cache.h"
-#endif // RCL_REMAPPING_ENABLED_TRUE
+#endif // RCL_MICROROS_COMPLETE_IMPL
 #include "rcl/rcl.h"
 #include "rcl/remap.h"
 #include "rcl/security.h"
@@ -208,10 +208,10 @@ rcl_node_init(
   node->impl->logger_name = NULL;
   node->impl->fq_name = NULL;
   node->impl->options = rcl_node_get_default_options();
-#ifdef RCL_REMAPPING_ENABLED_TRUE
+#ifdef RCL_MICROROS_COMPLETE_IMPL
   node->impl->registered_types_by_type_hash = rcutils_get_zero_initialized_hash_map();
   node->impl->get_type_description_service = rcl_get_zero_initialized_service();
-#endif // RCL_REMAPPING_ENABLED_TRUE
+#endif // RCL_MICROROS_COMPLETE_IMPL
   node->context = context;
   // Initialize node impl.
   ret = rcl_node_options_copy(options, &(node->impl->options));
@@ -219,7 +219,7 @@ rcl_node_init(
     goto fail;
   }
 
-#ifdef RCL_REMAPPING_ENABLED_TRUE
+#ifdef RCL_MICROROS_COMPLETE_IMPL
   // Remap the node name and namespace if remap rules are given
   rcl_arguments_t * global_args = NULL;
   if (node->impl->options.use_global_arguments) {
@@ -246,7 +246,7 @@ rcl_node_init(
     should_free_local_namespace_ = true;
     local_namespace_ = remapped_namespace;
   }
-#endif // RCL_REMAPPING_ENABLED_TRUE
+#endif // RCL_MICROROS_COMPLETE_IMPL
 
   // compute fully qualfied name of the node.
   if ('/' == local_namespace_[strlen(local_namespace_) - 1]) {
@@ -350,7 +350,7 @@ fail:
       allocator->deallocate(node->impl->graph_guard_condition, allocator->state);
     }
 
-#ifdef RCL_REMAPPING_ENABLED_TRUE
+#ifdef RCL_MICROROS_COMPLETE_IMPL
     if (NULL != node->impl->options.arguments.impl) {
       ret = rcl_arguments_fini(&(node->impl->options.arguments));
       if (ret != RCL_RET_OK) {
@@ -360,7 +360,7 @@ fail:
         );
       }
     }
-#endif // RCL_REMAPPING_ENABLED_TRUE
+#endif // RCL_MICROROS_COMPLETE_IMPL
     allocator->deallocate(node->impl, allocator->state);
   }
   *node = rcl_get_zero_initialized_node();
@@ -413,14 +413,14 @@ rcl_node_fini(rcl_node_t * node)
   // assuming that allocate and deallocate are ok since they are checked in init
   allocator.deallocate((char *)node->impl->logger_name, allocator.state);
   allocator.deallocate((char *)node->impl->fq_name, allocator.state);
-#ifdef RCL_REMAPPING_ENABLED_TRUE
+#ifdef RCL_MICROROS_COMPLETE_IMPL
   if (NULL != node->impl->options.arguments.impl) {
     rcl_ret_t ret = rcl_arguments_fini(&(node->impl->options.arguments));
     if (ret != RCL_RET_OK) {
       return ret;
     }
   }
-#endif // RCL_REMAPPING_ENABLED_TRUE
+#endif // RCL_MICROROS_COMPLETE_IMPL
   allocator.deallocate(node->impl, allocator.state);
   node->impl = NULL;
   RCUTILS_LOG_DEBUG_NAMED(ROS_PACKAGE_NAME, "Node finalized");
@@ -563,7 +563,7 @@ void rcl_node_type_description_service_handle_request(
   const type_description_interfaces__srv__GetTypeDescription_Request * request,
   type_description_interfaces__srv__GetTypeDescription_Response * response)
 {
-#ifdef RCL_REMAPPING_ENABLED_TRUE
+#ifdef RCL_MICROROS_COMPLETE_IMPL
   rcl_type_info_t type_info;
   RCL_CHECK_FOR_NULL_WITH_MSG(node, "invalid node handle", return;);
   RCL_CHECK_FOR_NULL_WITH_MSG(node->impl, "invalid node", return;);
@@ -622,13 +622,13 @@ void rcl_node_type_description_service_handle_request(
   }
 
   response->successful = true;
-#endif //RCL_REMAPPING_ENABLED_TRUE
+#endif //RCL_MICROROS_COMPLETE_IMPL
 }
 
 rcl_ret_t rcl_node_type_description_service_init(rcl_node_t * node)
 {
 
-#ifdef RCL_REMAPPING_ENABLED_TRUE
+#ifdef RCL_MICROROS_COMPLETE_IMPL
   RCL_CHECK_ARGUMENT_FOR_NULL(node, RCL_RET_INVALID_ARGUMENT);
   RCL_CHECK_ARGUMENT_FOR_NULL(node->impl, RCL_RET_NODE_INVALID);
 
@@ -666,12 +666,12 @@ rcl_ret_t rcl_node_type_description_service_init(rcl_node_t * node)
 #else
   (void)node;
   return RCL_RET_UNSUPPORTED;
-#endif //RCL_REMAPPING_ENABLED_TRUE
+#endif //RCL_MICROROS_COMPLETE_IMPL
 }
 
 rcl_ret_t rcl_node_type_description_service_fini(rcl_node_t * node)
 {
-#ifdef RCL_REMAPPING_ENABLED_TRUE
+#ifdef RCL_MICROROS_COMPLETE_IMPL
   RCL_CHECK_ARGUMENT_FOR_NULL(node, RCL_RET_INVALID_ARGUMENT);
   RCL_CHECK_ARGUMENT_FOR_NULL(node->impl, RCL_RET_NODE_INVALID);
   if (!rcl_service_is_valid(&node->impl->get_type_description_service)) {
@@ -696,7 +696,7 @@ rcl_ret_t rcl_node_get_type_description_service(
   const rcl_node_t * node,
   rcl_service_t ** service_out)
 {
-#ifdef RCL_REMAPPING_ENABLED_TRUE
+#ifdef RCL_MICROROS_COMPLETE_IMPL
   RCL_CHECK_ARGUMENT_FOR_NULL(node, RCL_RET_INVALID_ARGUMENT);
   RCL_CHECK_ARGUMENT_FOR_NULL(node->impl, RCL_RET_NODE_INVALID);
   RCL_CHECK_ARGUMENT_FOR_NULL(service_out, RCL_RET_SERVICE_INVALID);
